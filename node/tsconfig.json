@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2024",
+    "module": "es2022",
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "outDir": "./build",
+    "rootDir": "./"
+  },
+  "include": ["/**/*"],
+  "exclude": ["node_modules"]
+}
