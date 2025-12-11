@@ -1,0 +1,69 @@
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    working_dir: /usr/app/postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgresql:/usr/app/postgresql/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    working_dir: /usr/app/mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/usr/app/mongodb/data/db
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "${MINIO_API_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
+    working_dir: /usr/app/minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./minio_data:/usr/app/minio/data
+    command: server /usr/app/minio/data --console-address ":9001"
+  node:
+    image: node:lts-alpine
+    container_name: node
+    working_dir: /usr/app/node
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      POSTGRES_URI: ${POSTGRES_URI}
+      posrt: ${NODE_PORT}
+    ports:
+      - ${NODE_PORT}:${NODE_PORT}
+    volumes:
+      - ./node:/usr/app/node
+      - /usr/app/node/node_modules
+    # command: sh -c "npm i && npm run build && npm start"
+    # command: sh -c "npm i -y && node --experimental-strip-types --watch index.ts"
+    command: sh -c "npm i -y && npx tsx watch index"
+    depends_on:
+      - mongodb
+      - postgresql
+      - minio
+  nextjs:
+    image: node:lts-alpine
+    container_name: nextjs
+    working_dir: /usr/app/nextjs
+    volumes:
+      - ./nextjs:/usr/app/nextjs
+      - /usr/app/nextjs/node_modules
+    ports:
+      - ${NEXT_PORT}:${NEXT_PORT}
+    # command: sh -c "npm i && npm run build && npm start"
+    command: sh -c "npm i && npm run dev"
+
+volumes:
+  mongodb:
+  postgresql:
+  minio_data:
