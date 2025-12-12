@@ -1,29 +1,27 @@
 import express from "express"
+import {
+  createNote,
+  deleteNote,
+  getAllNotes,
+  getNoteById,
+  updateNote,
+  forceDeleteNote,
+  getAllDeletedNotes,
+} from "../controller/NoteController"
 
 const noteRouter = express.Router()
 
-noteRouter.route("/notes").get((req, res) => {
-  return res.json({ message: "Get all notes" })
-})
+noteRouter.route("/notes").get(getAllNotes)
+noteRouter.route("/notes/deleted").get(getAllDeletedNotes)
+
+noteRouter.route("/note/").post(createNote)
 
 noteRouter
   .route("/note/:id")
-  .get((req, res) => {
-    const { id } = req.params
-    return res.json({ message: "get a single note " + id })
-  })
-  .delete((req, res) => {
-    const { id } = req.params
-    return res.json({ message: "delete a single note " + id })
-  })
-  .put((req, res) => {
-    return res.json({ message: "put a single note" })
-  })
+  .get(getNoteById)
+  .delete(deleteNote)
+  .put(updateNote)
 
-noteRouter.route("/note/").post((req, res) => {
-  const data = req.body
-  console.log({ data })
-  return res.json({ message: "post a single note" })
-})
+noteRouter.route("/note/:id/force").delete(forceDeleteNote)
 
 export default noteRouter

@@ -8,7 +8,8 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "outDir": "./build",
-    "rootDir": "./"
+    "rootDir": "./",
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": ["/**/*"],
   "exclude": ["node_modules"]
