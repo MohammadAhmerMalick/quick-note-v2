@@ -84,7 +84,7 @@ export const updateNote = async (req: Request, res: Response) => {
       { new: true }
     )
 
-    return res.success("♻️ Note updated", note, 201)
+    return res.success("♻️ Note updated", note, 200)
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       return res.error("❌ Validation failed", 400, error.errors)
