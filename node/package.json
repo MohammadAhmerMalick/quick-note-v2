@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "npm tsx watch --env-file=../.env index"
+    "dev": "npm tsx watch --env-file=../.env index",
+    "pgdb:push": "npx drizzle-kit push --config=./db/postgres/drizzle.config.ts",
+    "pgdb:studio": "npx drizzle-kit studio --config=./db/postgres/drizzle.config.ts",
+    "pgdb:generate": "npx drizzle-kit generate --config=./db/postgres/drizzle.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,10 +19,11 @@
     "@types/express": "^5.0.6",
     "@types/minio": "^7.1.0",
     "@types/node": "^24.10.1",
-    "@types/pg": "^8.15.6"
+    "@types/pg": "^8.16.0",
+    "drizzle-kit": "^0.31.8"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.0",
+    "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
     "minio": "^8.0.6",
     "mongoose": "^9.0.1",

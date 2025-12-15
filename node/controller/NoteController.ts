@@ -109,7 +109,7 @@ export const deleteNote = async (req: Request, res: Response) => {
       return res.error("❌ Validation failed", 400, error.errors)
     }
 
-    return res.error("❌ Failed to create note", 500, error)
+    return res.error("❌ Failed to deleted note", 500, error)
   }
 }
 
@@ -124,6 +124,6 @@ export const forceDeleteNote = async (req: Request, res: Response) => {
       return res.error("❌ Validation failed", 400, error.errors)
     }
 
-    return res.error("❌ Failed to create note", 500, error)
+    return res.error("❌ Failed to deleted note", 500, error)
   }
 }
