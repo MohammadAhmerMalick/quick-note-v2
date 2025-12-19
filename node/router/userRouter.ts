@@ -1,5 +1,7 @@
 import express from "express"
-import {
+import userController from "../modules/user/UserController"
+
+const {
   createUser,
   deleteUser,
   getAllUsers,
@@ -7,7 +9,7 @@ import {
   updateUser,
   forceDeleteUser,
   getAllDeletedUsers,
-} from "../modules/user/UserController"
+} = userController
 
 const userRouter = express.Router()
 

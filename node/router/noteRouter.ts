@@ -1,5 +1,7 @@
 import express from "express"
-import {
+import noteController from "../modules/note/NoteController"
+
+const {
   createNote,
   deleteNote,
   getAllNotes,
@@ -7,7 +9,7 @@ import {
   updateNote,
   forceDeleteNote,
   getAllDeletedNotes,
-} from "../modules/note/NoteController"
+} = noteController
 
 const noteRouter = express.Router()
 

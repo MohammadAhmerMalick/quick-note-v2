@@ -1,5 +1,7 @@
 import express from "express"
-import {
+import roleController from "../modules/role/RoleController"
+
+const {
   createRole,
   deleteRole,
   getAllRoles,
@@ -7,7 +9,7 @@ import {
   updateRole,
   forceDeleteRole,
   getAllDeletedRoles,
-} from "../modules/role/RoleController"
+} = roleController
 
 const roleRouter = express.Router()
 
