@@ -12,7 +12,7 @@ const fileSchema = new mongoose.Schema(
 
 const NoteSchema = new mongoose.Schema(
   {
-    // userId: { type: Number, required: true },
+    userId: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String },
     files: { type: [fileSchema], default: [] },

@@ -57,11 +57,11 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body
+    const { name, role, email, password } = req.body
 
     const user = await pgdb
       .insert(User)
-      .values({ name, email, password })
+      .values({ name, email, role, password })
       .returning(getTableColumns(User))
 
     return res.success("🌟 User created", user, 201)

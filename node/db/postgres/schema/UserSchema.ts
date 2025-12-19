@@ -1,5 +1,5 @@
 import { varchar, pgTable, uuid, boolean, timestamp } from "drizzle-orm/pg-core"
-// import Role from "./RoleSchema"
+import Role from "./RoleSchema"
 
 const User = pgTable("users", {
   id: uuid().unique().notNull().primaryKey().defaultRandom(),
@@ -10,11 +10,11 @@ const User = pgTable("users", {
   image: varchar({ length: 255 }),
   approved: boolean().default(false),
 
-  // role: varchar({ length: 32 })
-  //   .notNull()
-  //   .references(() => Role.id, {
-  //     onDelete: "cascade",
-  //   }),
+  role: varchar({ length: 100 })
+    .notNull()
+    .references(() => Role.name, {
+      onDelete: "cascade",
+    }),
 
   isDeleted: boolean().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })

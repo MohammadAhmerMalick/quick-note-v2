@@ -53,9 +53,9 @@ export const getNoteById = async (req: Request, res: Response) => {
 
 export const createNote = async (req: Request, res: Response) => {
   try {
-    const { title, description, files } = req.body
+    const { title, description, files, userId } = req.body
 
-    const note = new Note({ title, description, files })
+    const note = new Note({ title, description, files, userId })
     await note.save()
 
     return res.success("🌟 Note created", note, 201)
