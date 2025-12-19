@@ -1,7 +1,32 @@
+import jwt from "jsonwebtoken"
 import type { Request, Response } from "express"
 import userModel from "./UserModel"
 
 class UserController {
+  signin = async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body
+      const users = await userModel.getUserByEmail(email)
+
+      if (!users.length) return res.error("❌ User not found", 404)
+
+      const { password: userPassword, ...user } = users[0]
+      const isPasswordValid = userPassword === password
+
+      if (!isPasswordValid) return res.error("❌ Invalid password", 401)
+
+      var token = jwt.sign({ data: user }, process.env.JWT_SECRET || "secret", {
+        expiresIn: "30d",
+      })
+
+      return res.success("✅ User signed in successfully", { user, token })
+    } catch (error) {
+      console.log({ error })
+
+      return res.error("❌ Failed to signin user", 500, error)
+    }
+  }
+
   getAllUsers = async (req: Request, res: Response) => {
     try {
       const users = await userModel.getAllUsers()
@@ -55,9 +80,23 @@ class UserController {
     try {
       const { name, role, email, password } = req.body
 
-      const user = await userModel.createUser({ name, role, email, password })
+      const existingUsers = await userModel.getUserByEmail(email)
+      if (existingUsers.length) return res.error("❌ Email already in use", 409)
+      if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is not defined")
 
-      return res.success("🌟 User created", user, 201)
+      const userData = await userModel.createUser({
+        name,
+        role,
+        email,
+        password,
+      })
+      const { password: userPassword, ...user } = userData[0]
+
+      var token = jwt.sign({ data: user }, process.env.JWT_SECRET || "secret", {
+        expiresIn: "30d",
+      })
+
+      return res.success("🌟 User created", { user, token }, 201)
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
       //   return res.error("❌ Validation failed", 400, error.errors)

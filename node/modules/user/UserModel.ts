@@ -12,6 +12,9 @@ class UserModel {
   getUserById = async (id: string) =>
     pgdb.select().from(User).where(eq(User.id, id))
 
+  getUserByEmail = async (email: string) =>
+    pgdb.select().from(User).where(eq(User.email, email))
+
   createUser = async (user: UserType) =>
     pgdb.insert(User).values(user).returning(getTableColumns(User))
 
