@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import type { Request, Response } from "express"
-import Note from "../db/mongo/schema/NoteSchema"
+import Note from "../../db/mongo/schema/NoteSchema"
 
 export const getAllNotes = async (req: Request, res: Response) => {
   try {

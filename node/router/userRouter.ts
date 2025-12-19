@@ -7,7 +7,7 @@ import {
   updateUser,
   forceDeleteUser,
   getAllDeletedUsers,
-} from "../controller/UserController"
+} from "../modules/user/UserController"
 
 const userRouter = express.Router()
 

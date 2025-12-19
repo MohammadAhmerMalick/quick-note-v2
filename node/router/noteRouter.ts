@@ -7,7 +7,7 @@ import {
   updateNote,
   forceDeleteNote,
   getAllDeletedNotes,
-} from "../controller/NoteController"
+} from "../modules/note/NoteController"
 
 const noteRouter = express.Router()
 

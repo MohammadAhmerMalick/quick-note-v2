@@ -1,14 +1,9 @@
-import { eq, getTableColumns } from "drizzle-orm"
 import type { Request, Response } from "express"
-import pgdb from "../db/postgres/config"
-import User from "../db/postgres/schema/UserSchema"
+import userModel from "./UserModel"
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const users = await pgdb
-      .select()
-      .from(User)
-      .where(eq(User.isDeleted, false))
+    const users = await userModel.getAllUsers()
 
     return res.success("🔍 Users fetched", {
       length: users.length,
@@ -25,7 +20,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const getAllDeletedUsers = async (req: Request, res: Response) => {
   try {
-    const users = await pgdb.select().from(User).where(eq(User.isDeleted, true))
+    const users = await userModel.getAllDeletedUsers()
 
     return res.success("🔍 Users fetched", {
       length: users.length,
@@ -43,7 +38,7 @@ export const getAllDeletedUsers = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const user = await pgdb.select().from(User).where(eq(User.id, id))
+    const user = await userModel.getUserById(id)
 
     return res.success("🔍 User fetched", user)
   } catch (error) {
@@ -59,10 +54,7 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, role, email, password } = req.body
 
-    const user = await pgdb
-      .insert(User)
-      .values({ name, email, role, password })
-      .returning(getTableColumns(User))
+    const user = await userModel.createUser({ name, role, email, password })
 
     return res.success("🌟 User created", user, 201)
   } catch (error) {
@@ -77,18 +69,20 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { name, email, password } = req.body
-    const updates: { name?: string; email?: string; password?: string } = {}
+    const { name, email, password, role } = req.body
+    const updates: {
+      name?: string
+      role?: string
+      email?: string
+      password?: string
+    } = {}
 
     if (name) updates.name = name
+    if (role) updates.role = role
     if (email) updates.email = email
     if (password) updates.password = password
 
-    const user = await pgdb
-      .update(User)
-      .set(updates)
-      .where(eq(User.id, id))
-      .returning(getTableColumns(User))
+    const user = await userModel.updateUser(id, { name, email, password, role })
 
     return res.success("♻️ User updated", user, 200)
   } catch (error) {
@@ -103,11 +97,7 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const user = await pgdb
-      .update(User)
-      .set({ isDeleted: true, updatedAt: new Date() })
-      .where(eq(User.id, id))
-      .returning(getTableColumns(User))
+    const user = await userModel.deleteUser(id)
 
     return res.success("🗑 User deleted", user, 200)
   } catch (error) {
@@ -122,10 +112,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 export const forceDeleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const user = await pgdb
-      .delete(User)
-      .where(eq(User.id, id))
-      .returning(getTableColumns(User))
+    const user = await userModel.forceDeleteUser(id)
 
     return res.success("🗑 User deleted", user, 200)
   } catch (error) {

@@ -7,7 +7,7 @@ import {
   updateRole,
   forceDeleteRole,
   getAllDeletedRoles,
-} from "../controller/RoleController"
+} from "../modules/role/RoleController"
 
 const roleRouter = express.Router()
 

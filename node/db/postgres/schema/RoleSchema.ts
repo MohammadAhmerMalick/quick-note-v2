@@ -12,4 +12,6 @@ const Role = pgTable("roles", {
     .notNull(),
 })
 
+export type RoleType = typeof Role.$inferInsert
+
 export default Role

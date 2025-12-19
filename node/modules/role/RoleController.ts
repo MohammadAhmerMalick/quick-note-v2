@@ -1,14 +1,9 @@
-import { eq, getTableColumns } from "drizzle-orm"
 import type { Request, Response } from "express"
-import pgdb from "../db/postgres/config"
-import Role from "../db/postgres/schema/RoleSchema"
+import roleModel from "./RoleModel"
 
 export const getAllRoles = async (req: Request, res: Response) => {
   try {
-    const roles = await pgdb
-      .select()
-      .from(Role)
-      .where(eq(Role.isDeleted, false))
+    const roles = await roleModel.getAllRoles()
 
     return res.success("🔍 Roles fetched", {
       length: roles.length,
@@ -25,7 +20,7 @@ export const getAllRoles = async (req: Request, res: Response) => {
 
 export const getAllDeletedRoles = async (req: Request, res: Response) => {
   try {
-    const roles = await pgdb.select().from(Role).where(eq(Role.isDeleted, true))
+    const roles = await roleModel.getAllDeletedRoles()
 
     return res.success("🔍 Roles fetched", {
       length: roles.length,
@@ -43,7 +38,7 @@ export const getAllDeletedRoles = async (req: Request, res: Response) => {
 export const getRoleById = async (req: Request, res: Response) => {
   try {
     const { name } = req.params
-    const role = await pgdb.select().from(Role).where(eq(Role.name, name))
+    const role = await roleModel.getRoleById(name)
 
     return res.success("🔍 Role fetched", role)
   } catch (error) {
@@ -59,10 +54,7 @@ export const createRole = async (req: Request, res: Response) => {
   try {
     const { name } = req.body
 
-    const role = await pgdb
-      .insert(Role)
-      .values({ name })
-      .returning(getTableColumns(Role))
+    const role = await roleModel.createRole({ name })
 
     return res.success("🌟 Role created", role, 201)
   } catch (error) {
@@ -78,15 +70,9 @@ export const updateRole = async (req: Request, res: Response) => {
   try {
     const { name: oldName } = req.params
     const { name } = req.body
-    const updates: { name?: string } = {}
+    const updates: { name: string } = { name: name || oldName }
 
-    if (name) updates.name = name
-
-    const role = await pgdb
-      .update(Role)
-      .set(updates)
-      .where(eq(Role.name, oldName))
-      .returning(getTableColumns(Role))
+    const role = await roleModel.updateRole(oldName, updates)
 
     return res.success("♻️ Role updated", role, 200)
   } catch (error) {
@@ -101,11 +87,7 @@ export const updateRole = async (req: Request, res: Response) => {
 export const deleteRole = async (req: Request, res: Response) => {
   try {
     const { name } = req.params
-    const role = await pgdb
-      .update(Role)
-      .set({ isDeleted: true, updatedAt: new Date() })
-      .where(eq(Role.name, name))
-      .returning(getTableColumns(Role))
+    const role = await roleModel.deleteRole(name)
 
     return res.success("🗑 Role deleted", role, 200)
   } catch (error) {
@@ -120,10 +102,7 @@ export const deleteRole = async (req: Request, res: Response) => {
 export const forceDeleteRole = async (req: Request, res: Response) => {
   try {
     const { name } = req.params
-    const role = await pgdb
-      .delete(Role)
-      .where(eq(Role.name, name))
-      .returning(getTableColumns(Role))
+    const role = await roleModel.forceDeleteRole(name)
 
     return res.success("🗑 Role deleted", role, 200)
   } catch (error) {
