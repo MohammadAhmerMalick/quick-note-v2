@@ -10,7 +10,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET}
   mongodb:
     image: mongo:latest
     container_name: mongo
@@ -38,6 +37,7 @@ services:
       MONGO_URI: ${MONGO_URI}
       POSTGRES_URI: ${POSTGRES_URI}
       posrt: ${NODE_PORT}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - ${NODE_PORT}:${NODE_PORT}
     volumes:
