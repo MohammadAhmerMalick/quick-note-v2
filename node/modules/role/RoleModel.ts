@@ -18,14 +18,14 @@ class RoleModel {
   updateRole = async (name: string, updates: RoleType) =>
     pgdb
       .update(Role)
-      .set(updates)
+      .set({ ...updates, deletedAt: new Date() })
       .where(eq(Role.name, name))
       .returning(getTableColumns(Role))
 
   deleteRole = async (name: string) =>
     pgdb
       .update(Role)
-      .set({ isDeleted: true, updatedAt: new Date() })
+      .set({ isDeleted: true, deletedAt: new Date() })
       .where(eq(Role.name, name))
       .returning(getTableColumns(Role))
 

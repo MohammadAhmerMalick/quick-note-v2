@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "npm tsx watch --env-file=../.env index",
-    "pgdb:push": "npx drizzle-kit push --config=./db/postgres/drizzle.config.ts",
+    "pgdb:push": "npx drizzle-kit push --force --config=./db/postgres/drizzle.config.ts",
     "pgdb:studio": "npx drizzle-kit studio --config=./db/postgres/drizzle.config.ts",
     "pgdb:generate": "npx drizzle-kit generate --config=./db/postgres/drizzle.config.ts"
   },
@@ -16,6 +16,7 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/minio": "^7.1.0",
@@ -24,6 +25,7 @@
     "drizzle-kit": "^0.31.8"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",

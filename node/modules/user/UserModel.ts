@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt"
 import { eq, getTableColumns } from "drizzle-orm"
 import pgdb from "../../db/postgres/config"
 import User, { type UserType } from "../../db/postgres/schema/UserSchema"
@@ -15,20 +16,29 @@ class UserModel {
   getUserByEmail = async (email: string) =>
     pgdb.select().from(User).where(eq(User.email, email))
 
-  createUser = async (user: UserType) =>
-    pgdb.insert(User).values(user).returning(getTableColumns(User))
+  createUser = async (user: UserType) => {
+    const hashedUser = await bcrypt.hash(user.password, 10)
 
-  updateUser = async (id: string, updates: UserType) =>
-    pgdb
+    return pgdb
+      .insert(User)
+      .values({ ...user, password: hashedUser })
+      .returning(getTableColumns(User))
+  }
+
+  updateUser = async (id: string, updates: UserType) => {
+    const hashedUser = await bcrypt.hash(updates.password, 10)
+
+    return pgdb
       .update(User)
-      .set(updates)
+      .set({ ...updates, password: hashedUser, updatedAt: new Date() })
       .where(eq(User.id, id))
       .returning(getTableColumns(User))
+  }
 
   deleteUser = async (id: string) =>
     pgdb
       .update(User)
-      .set({ isDeleted: true, updatedAt: new Date() })
+      .set({ isDeleted: true, deletedAt: new Date() })
       .where(eq(User.id, id))
       .returning(getTableColumns(User))
 

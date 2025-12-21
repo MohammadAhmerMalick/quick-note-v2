@@ -10,6 +10,7 @@ const Role = pgTable("roles", {
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 })
 
 export type RoleType = typeof Role.$inferInsert

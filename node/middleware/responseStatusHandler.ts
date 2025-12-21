@@ -13,7 +13,8 @@ const responseStatusHandler = (
     })
   }
 
-  res.error = (message = "Error", status = 400, data = null) => {
+  res.error = (message = "Error", data = null, status = 400) => {
+    console.error({ error: data })
     return res.status(status).json({
       status,
       message,

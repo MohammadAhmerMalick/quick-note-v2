@@ -23,7 +23,7 @@ class UserController {
     } catch (error) {
       console.log({ error })
 
-      return res.error("❌ Failed to signin user", 500, error)
+      return res.error("❌ Failed to signin user", error, 500)
     }
   }
 
@@ -40,7 +40,7 @@ class UserController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch user", 500, error)
+      return res.error("❌ Failed to fetch user", error, 500)
     }
   }
 
@@ -57,7 +57,7 @@ class UserController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch user", 500, error)
+      return res.error("❌ Failed to fetch user", error, 500)
     }
   }
 
@@ -72,7 +72,7 @@ class UserController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch user", 500, error)
+      return res.error("❌ Failed to fetch user", error, 500)
     }
   }
 
@@ -101,8 +101,7 @@ class UserController {
       // if (error instanceof mongoose.Error.ValidationError) {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
-
-      return res.error("❌ Failed to create user", 500, error)
+      return res.error("❌ Failed to create user", error, 500)
     }
   }
 
@@ -122,12 +121,14 @@ class UserController {
       if (email) updates.email = email
       if (password) updates.password = password
 
-      const user = await userModel.updateUser(id, {
+      const userData = await userModel.updateUser(id, {
         name,
         email,
         password,
         role,
       })
+
+      const { password: userPassword, ...user } = userData[0]
 
       return res.success("♻️ User updated", user, 200)
     } catch (error) {
@@ -135,7 +136,7 @@ class UserController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to update user", 500, error)
+      return res.error("❌ Failed to update user", error, 500)
     }
   }
 
@@ -150,7 +151,7 @@ class UserController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to deleted user", 500, error)
+      return res.error("❌ Failed to deleted user", error, 500)
     }
   }
 
@@ -165,7 +166,7 @@ class UserController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to deleted user", 500, error)
+      return res.error("❌ Failed to deleted user", error, 500)
     }
   }
 }

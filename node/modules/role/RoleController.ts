@@ -15,7 +15,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch role", 500, error)
+      return res.error("❌ Failed to fetch role", error, 500)
     }
   }
 
@@ -32,7 +32,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch role", 500, error)
+      return res.error("❌ Failed to fetch role", error, 500)
     }
   }
 
@@ -47,7 +47,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch role", 500, error)
+      return res.error("❌ Failed to fetch role", error, 500)
     }
   }
 
@@ -63,7 +63,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to create role", 500, error)
+      return res.error("❌ Failed to create role", error, 500)
     }
   }
 
@@ -81,7 +81,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to update role", 500, error)
+      return res.error("❌ Failed to update role", error, 500)
     }
   }
 
@@ -96,7 +96,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to deleted role", 500, error)
+      return res.error("❌ Failed to deleted role", error, 500)
     }
   }
 
@@ -111,7 +111,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to deleted role", 500, error)
+      return res.error("❌ Failed to deleted role", error, 500)
     }
   }
 }
