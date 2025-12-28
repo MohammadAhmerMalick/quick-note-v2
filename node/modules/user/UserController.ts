@@ -1,6 +1,7 @@
-import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 import type { Request, Response } from "express"
 import userModel from "./UserModel"
+import jwt from "../../helper/jtw"
 
 class UserController {
   signin = async (req: Request, res: Response) => {
@@ -8,22 +9,20 @@ class UserController {
       const { email, password } = req.body
       const users = await userModel.getUserByEmail(email)
 
-      if (!users.length) return res.error("❌ User not found", 404)
+      if (!users.length) return res.error("👔❌ User not found", 404)
 
       const { password: userPassword, ...user } = users[0]
-      const isPasswordValid = userPassword === password
 
-      if (!isPasswordValid) return res.error("❌ Invalid password", 401)
+      const isPasswordValid = await bcrypt.compare(password, userPassword)
+      if (!isPasswordValid) return res.error("🗝️❌ Invalid password", 401)
 
-      var token = jwt.sign({ data: user }, process.env.JWT_SECRET || "secret", {
-        expiresIn: "30d",
-      })
+      const token = jwt.sign({ data: { user: { id: user.id } } })
 
-      return res.success("✅ User signed in successfully", { user, token })
+      return res.success("🚪✅ User signed in successfully", { user, token })
     } catch (error) {
       console.log({ error })
 
-      return res.error("❌ Failed to signin user", error, 500)
+      return res.error("🚪❌ Failed to signin user", 500, error)
     }
   }
 
@@ -31,16 +30,16 @@ class UserController {
     try {
       const users = await userModel.getAllUsers()
 
-      return res.success("🔍 Users fetched", {
+      return res.success("👔🔍 Users fetched", {
         length: users.length,
         users: users,
       })
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, error.errors)
+      //   return res.error("❌ Validation failed", 400, errors,error)
       // }
 
-      return res.error("❌ Failed to fetch user", error, 500)
+      return res.error("❌ Failed to fetch user", 500, error)
     }
   }
 
@@ -54,10 +53,10 @@ class UserController {
       })
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, error.errors)
+      //   return res.error("❌ Validation failed", 400, errors,error)
       // }
 
-      return res.error("❌ Failed to fetch user", error, 500)
+      return res.error("❌ Failed to fetch user", 500, error)
     }
   }
 
@@ -69,10 +68,10 @@ class UserController {
       return res.success("🔍 User fetched", user)
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, error.errors)
+      //   return res.error("❌ Validation failed", 400, errors,error)
       // }
 
-      return res.error("❌ Failed to fetch user", error, 500)
+      return res.error("❌ Failed to fetch user", 500, error)
     }
   }
 
@@ -81,7 +80,8 @@ class UserController {
       const { name, role, email, password } = req.body
 
       const existingUsers = await userModel.getUserByEmail(email)
-      if (existingUsers.length) return res.error("❌ Email already in use", 409)
+      if (existingUsers.length)
+        return res.error("📧❌ Email already in use", 409)
       if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is not defined")
 
       const userData = await userModel.createUser({
@@ -92,16 +92,14 @@ class UserController {
       })
       const { password: userPassword, ...user } = userData[0]
 
-      var token = jwt.sign({ data: user }, process.env.JWT_SECRET || "secret", {
-        expiresIn: "30d",
-      })
+      const token = jwt.sign({ data: { user: { id: user.id } } })
 
       return res.success("🌟 User created", { user, token }, 201)
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, error.errors)
+      //   return res.error("❌ Validation failed", 400, errors,error)
       // }
-      return res.error("❌ Failed to create user", error, 500)
+      return res.error("❌ Failed to create user", 500, error)
     }
   }
 
@@ -133,10 +131,10 @@ class UserController {
       return res.success("♻️ User updated", user, 200)
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, error.errors)
+      //   return res.error("❌ Validation failed", 400, errors,error)
       // }
 
-      return res.error("❌ Failed to update user", error, 500)
+      return res.error("❌ Failed to update user", 500, error)
     }
   }
 
@@ -148,10 +146,10 @@ class UserController {
       return res.success("🗑 User deleted", user, 200)
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, error.errors)
+      //   return res.error("❌ Validation failed", 400, errors,error)
       // }
 
-      return res.error("❌ Failed to deleted user", error, 500)
+      return res.error("❌ Failed to deleted user", 500, error)
     }
   }
 
@@ -163,10 +161,10 @@ class UserController {
       return res.success("🗑 User deleted", user, 200)
     } catch (error) {
       // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, error.errors)
+      //   return res.error("❌ Validation failed", 400, errors,error)
       // }
 
-      return res.error("❌ Failed to deleted user", error, 500)
+      return res.error("❌ Failed to deleted user", 500, error)
     }
   }
 }

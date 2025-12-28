@@ -15,7 +15,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch role", error, 500)
+      return res.error("❌ Failed to fetch role", 500, error)
     }
   }
 
@@ -32,14 +32,14 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch role", error, 500)
+      return res.error("❌ Failed to fetch role", 500, error)
     }
   }
 
-  getRoleById = async (req: Request, res: Response) => {
+  getRoleByName = async (req: Request, res: Response) => {
     try {
       const { name } = req.params
-      const role = await roleModel.getRoleById(name)
+      const role = await roleModel.getRoleByName(name)
 
       return res.success("🔍 Role fetched", role)
     } catch (error) {
@@ -47,7 +47,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to fetch role", error, 500)
+      return res.error("❌ Failed to fetch role", 500, error)
     }
   }
 
@@ -63,7 +63,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to create role", error, 500)
+      return res.error("❌ Failed to create role", 500, error)
     }
   }
 
@@ -81,7 +81,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to update role", error, 500)
+      return res.error("❌ Failed to update role", 500, error)
     }
   }
 
@@ -96,7 +96,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to deleted role", error, 500)
+      return res.error("❌ Failed to deleted role", 500, error)
     }
   }
 
@@ -111,7 +111,7 @@ class RoleController {
       //   return res.error("❌ Validation failed", 400, error.errors)
       // }
 
-      return res.error("❌ Failed to deleted role", error, 500)
+      return res.error("❌ Failed to deleted role", 500, error)
     }
   }
 }

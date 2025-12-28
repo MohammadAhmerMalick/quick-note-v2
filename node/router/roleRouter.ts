@@ -5,7 +5,7 @@ const {
   createRole,
   deleteRole,
   getAllRoles,
-  getRoleById,
+  getRoleByName,
   updateRole,
   forceDeleteRole,
   getAllDeletedRoles,
@@ -20,7 +20,7 @@ roleRouter.route("/role/").post(createRole)
 
 roleRouter
   .route("/role/:id")
-  .get(getRoleById)
+  .get(getRoleByName)
   .delete(deleteRole)
   .put(updateRole)
 

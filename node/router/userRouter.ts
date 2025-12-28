@@ -25,9 +25,6 @@ userRouter
   .delete(deleteUser)
   .put(updateUser)
 
-userRouter.route("/auth/signin").post(signin)
-userRouter.route("/auth/signup").post(createUser)
-
 userRouter.route("/user/:id/force").delete(forceDeleteUser)
 
 export default userRouter
