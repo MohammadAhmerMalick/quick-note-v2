@@ -18,7 +18,7 @@ const responseStatusHandler = (
     return res.status(status).json({
       status,
       message,
-      data,
+      data: data.message || data,
     })
   }
 

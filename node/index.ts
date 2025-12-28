@@ -9,7 +9,10 @@ import responseStatusHandler from "./middleware/responseStatusHandler"
 
 // database
 import "./db/postgres/config"
+import seed from "./db/postgres/seed"
 await connectMongo()
+
+seed.init() // seed admin user and role in postgres
 
 const PORT = process.env.NODE_PORT || 8000
 
@@ -22,10 +25,12 @@ app.get("/", (req, res) => {
 })
 
 // api routes
-app.use("/api", auth, noteRouter)
-app.use("/api", auth, roleRouter)
-app.use("/api", auth, userRouter)
 app.use("/api/auth", authRouter)
+
+app.use(auth)
+app.use("/api", noteRouter)
+app.use("/api", roleRouter)
+app.use("/api", userRouter)
 
 // server
 app.listen(PORT, () => {

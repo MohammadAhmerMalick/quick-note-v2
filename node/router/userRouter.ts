@@ -2,7 +2,6 @@ import express from "express"
 import userController from "../modules/user/UserController"
 
 const {
-  signin,
   createUser,
   deleteUser,
   getAllUsers,

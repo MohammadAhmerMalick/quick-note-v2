@@ -16,10 +16,9 @@ class AuthMiddleware {
 
   private getUserDataByToken = async (token: string) => {
     const decoded = jwt.verify(token) as JwtPayload
+    if (!decoded?.data?.user?.id) throw Error("🛡️❌ User missing in token")
 
-    if (!decoded?.data?.userId) throw Error("🛡️❌ User missing in token")
-
-    const [user] = await userModel.getUserById(decoded.data.userId)
+    const [user] = await userModel.getUserById(decoded.data.user.id)
     return user
   }
 
@@ -30,8 +29,7 @@ class AuthMiddleware {
       req.user = await this.getUserDataByToken(token)
       console.log("5")
     } catch (error) {
-      console.log({ error })
-      return res.error("🛡️❌ No token provided", 401, error)
+      return res.error("🛡️❌ No/invalid token provided", 401, error)
     }
 
     next()
