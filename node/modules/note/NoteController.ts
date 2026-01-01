@@ -54,7 +54,8 @@ class NoteController {
 
   createNote = async (req: Request, res: Response) => {
     try {
-      const { title, description, files, userId } = req.body
+      const userId = req.user.id
+      const { title, description, files } = req.body
 
       const note = new Note({ title, description, files, userId })
       await note.save()
@@ -98,7 +99,7 @@ class NoteController {
 
   deleteNote = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params
+      const id = req.user.id
       const note = await Note.findByIdAndUpdate(
         id,
         { isDeleted: true },

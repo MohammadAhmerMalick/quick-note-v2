@@ -1,5 +1,6 @@
 import express from "express"
 import noteController from "../modules/note/NoteController"
+import { MulterMiddleware } from "../middlewares/multerMiddleware"
 
 const {
   createNote,
@@ -11,12 +12,17 @@ const {
   getAllDeletedNotes,
 } = noteController
 
+const multerInstance = new MulterMiddleware({
+  uploadPath: "uploads/files",
+  maxFileSize: 2 * 1024 * 1024, // 2MB
+})
+
 const noteRouter = express.Router()
 
 noteRouter.route("/notes").get(getAllNotes)
 noteRouter.route("/notes/deleted").get(getAllDeletedNotes)
 
-noteRouter.route("/note/").post(createNote)
+noteRouter.route("/note/").post(multerInstance.multiple(), createNote)
 
 noteRouter
   .route("/note/:id")

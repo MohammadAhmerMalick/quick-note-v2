@@ -36,10 +36,10 @@ class RoleController {
     }
   }
 
-  getRoleByName = async (req: Request, res: Response) => {
+  getRoleById = async (req: Request, res: Response) => {
     try {
       const { name } = req.params
-      const role = await roleModel.getRoleByName(name)
+      const role = await roleModel.getRoleById(name)
 
       return res.success("🔍 Role fetched", role)
     } catch (error) {

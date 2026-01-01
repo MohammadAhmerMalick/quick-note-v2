@@ -25,9 +25,7 @@ class AuthMiddleware {
   auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = this.extractBearerToekn(req)
-      console.log("4")
       req.user = await this.getUserDataByToken(token)
-      console.log("5")
     } catch (error) {
       return res.error("🛡️❌ No/invalid token provided", 401, error)
     }

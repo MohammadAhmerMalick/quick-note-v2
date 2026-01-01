@@ -20,6 +20,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/minio": "^7.1.0",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.16.0",
     "drizzle-kit": "^0.31.8"
@@ -31,6 +32,7 @@
     "jsonwebtoken": "^9.0.3",
     "minio": "^8.0.6",
     "mongoose": "^9.0.1",
+    "multer": "^2.0.2",
     "pg": "^8.16.3"
   }
 }
