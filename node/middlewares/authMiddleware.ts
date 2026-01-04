@@ -1,6 +1,6 @@
 import type { JwtPayload } from "jsonwebtoken"
 import type { Request, Response, NextFunction } from "express"
-import jwt from "../helper/jtw"
+import jwt from "../services/jwtService"
 import userModel from "../modules/user/UserModel"
 
 class AuthMiddleware {

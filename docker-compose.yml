@@ -17,18 +17,18 @@ services:
       - 27017:27017
     volumes:
       - ./mongo-data:/data/db
-  # minio:
-  #   image: minio/minio:latest
-  #   ports:
-  #     - "${MINIO_API_PORT}:9000"
-  #     - "${MINIO_CONSOLE_PORT}:9001"
-  #   working_dir: /usr/app/minio
-  #   environment:
-  #     MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-  #     MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-  #   volumes:
-  #     - ./minio_data:/usr/app/minio/data
-  #   command: server /usr/app/minio/data --console-address ":9001"
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "${MINIO_API_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
+    working_dir: /usr/app/minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./minio_data:/usr/app/minio/data
+    command: server /usr/app/minio/data --console-address ":9001"
   node:
     image: node:lts-alpine
     container_name: node
@@ -38,6 +38,10 @@ services:
       POSTGRES_URI: ${POSTGRES_URI}
       posrt: ${NODE_PORT}
       JWT_SECRET: ${JWT_SECRET}
+      MINIO_END_POINT: ${MINIO_END_POINT}
+      MINIO_API_PORT: ${MINIO_API_PORT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - ${NODE_PORT}:${NODE_PORT}
     volumes:
@@ -49,7 +53,7 @@ services:
     depends_on:
       - mongodb
       - postgresql
-      # - minio
+      - minio
   # nextjs:
   #   image: node:lts-alpine
   #   container_name: nextjs

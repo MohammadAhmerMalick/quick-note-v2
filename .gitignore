@@ -4,7 +4,8 @@ node_modules/
 
 dist/
 node/uploads
+node/drizzle/
 
 postgresql/
 mongo-data/
-node/drizzle/
+minio_data/

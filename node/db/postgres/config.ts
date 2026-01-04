@@ -8,6 +8,6 @@ if (!process.env.POSTGRES_URI)
 const client = new Pool({ connectionString: process.env.POSTGRES_URI })
 const pgdb = drizzle(client)
 
-console.log("💿✅ PostgreSQL connected successfully")
+console.info("💿✅ PostgreSQL connected successfully")
 
 export default pgdb

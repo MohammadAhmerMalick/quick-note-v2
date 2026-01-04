@@ -13,7 +13,7 @@ const {
 } = noteController
 
 const multerInstance = new MulterMiddleware({
-  uploadPath: "uploads/files",
+  uploadPath: "uploads",
   maxFileSize: 2 * 1024 * 1024, // 2MB
 })
 
@@ -28,7 +28,7 @@ noteRouter
   .route("/note/:id")
   .get(getNoteById)
   .delete(deleteNote)
-  .put(updateNote)
+  .put(multerInstance.multiple(), updateNote)
 
 noteRouter.route("/note/:id/force").delete(forceDeleteNote)
 

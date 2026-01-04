@@ -15,7 +15,7 @@ class Seed {
     if (!role) {
       await roleModel.createRole({ name: adminUser.role }) // create admin role
       await userModel.createUser(adminUser) // create admin user
-      console.log("✅ Admin role and user created.")
+      console.info("✅ Admin role and user created.")
     }
   }
 }

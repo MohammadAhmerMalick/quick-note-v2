@@ -14,11 +14,11 @@ const responseStatusHandler = (
   }
 
   res.error = (message = "Error", status = 400, data = null) => {
-    console.error({ error: data })
+    console.error({ error: data || message })
     return res.status(status).json({
       status,
       message,
-      data: data.message || data,
+      data: data?.message || data || message,
     })
   }
 

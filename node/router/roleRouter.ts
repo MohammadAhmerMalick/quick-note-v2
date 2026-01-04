@@ -4,9 +4,9 @@ import roleController from "../modules/role/RoleController"
 const {
   createRole,
   deleteRole,
-  getAllRoles,
-  getRoleById,
   updateRole,
+  getAllRoles,
+  getRoleByName,
   forceDeleteRole,
   getAllDeletedRoles,
 } = roleController
@@ -20,7 +20,7 @@ roleRouter.route("/role/").post(createRole)
 
 roleRouter
   .route("/role/:id")
-  .get(getRoleById)
+  .get(getRoleByName)
   .delete(deleteRole)
   .put(updateRole)
 

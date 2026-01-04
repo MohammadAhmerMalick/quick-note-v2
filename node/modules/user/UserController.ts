@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import type { Request, Response } from "express"
 import userModel from "./UserModel"
-import jwt from "../../helper/jtw"
+import jwt from "../../services/jwtService"
 
 class UserController {
   signin = async (req: Request, res: Response) => {

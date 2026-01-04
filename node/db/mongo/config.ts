@@ -7,7 +7,7 @@ const connectMongo = async () => {
 
     // MongoDB connection
     await mongoose.connect(process.env.MONGO_URI)
-    console.log("💿✅ MongoDB connected successfully")
+    console.info("💿✅ MongoDB connected successfully")
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError)
       console.error("💿❌ MongoDB connection error:", error.message)

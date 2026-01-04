@@ -1,4 +1,8 @@
-import express, { type NextFunction, type Request, type Response } from "express"
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express"
 import auth from "./middlewares/authMiddleware"
 import authRouter from "./router/authRouter"
 import connectMongo from "./db/mongo/config"
@@ -36,5 +40,5 @@ app.use("/api", userRouter)
 
 // server
 app.listen(PORT, () => {
-  console.log({ node: `http://localhost:${PORT}` })
+  console.info({ node: `http://localhost:${PORT}` })
 })

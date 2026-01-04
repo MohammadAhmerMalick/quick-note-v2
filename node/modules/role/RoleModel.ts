@@ -9,7 +9,7 @@ class RoleModel {
   getAllDeletedRoles = async () =>
     pgdb.select().from(Role).where(eq(Role.isDeleted, true))
 
-  getRoleById = async (name: string) =>
+  getRoleByName = async (name: string) =>
     pgdb.select().from(Role).where(eq(Role.name, name))
 
   createRole = async (role: RoleType) =>
