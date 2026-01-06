@@ -4,10 +4,18 @@ import userModel from "./UserModel"
 import jwt from "../../services/jwtService"
 
 class UserController {
+  private userModel: typeof userModel
+  private jwtService: typeof jwt
+
+  constructor() {
+    this.userModel = userModel
+    this.jwtService = jwt
+  }
+
   signin = async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body
-      const users = await userModel.getUserByEmail(email)
+      const users = await this.userModel.getUserByEmail(email)
 
       if (!users.length) return res.error("👔❌ User not found", 404)
 
@@ -16,7 +24,7 @@ class UserController {
       const isPasswordValid = await bcrypt.compare(password, userPassword)
       if (!isPasswordValid) return res.error("🗝️❌ Invalid password", 401)
 
-      const token = jwt.sign({ data: { user: { id: user.id } } })
+      const token = this.jwtService.sign({ data: { user: { id: user.id } } })
 
       return res.success("🚪✅ User signed in successfully", { user, token })
     } catch (error) {
@@ -28,49 +36,35 @@ class UserController {
 
   getAllUsers = async (req: Request, res: Response) => {
     try {
-      const users = await userModel.getAllUsers()
+      const users = await this.userModel.getAllUsers()
+      const userCount = users.length
 
-      return res.success("👔🔍 Users fetched", {
-        length: users.length,
-        users: users,
-      })
+      return res.success("👔🔍 Users fetched", { length: userCount, users })
     } catch (error) {
-      // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, errors,error)
-      // }
-
       return res.error("❌ Failed to fetch user", 500, error)
     }
   }
 
   getAllDeletedUsers = async (req: Request, res: Response) => {
     try {
-      const users = await userModel.getAllDeletedUsers()
+      const users = await this.userModel.getAllDeletedUsers()
+      const userCount = users.length
 
-      return res.success("🔍 Users fetched", {
-        length: users.length,
-        users: users,
-      })
+      return res.success("👔🔍 Users fetched", { length: userCount, users })
     } catch (error) {
-      // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, errors,error)
-      // }
-
       return res.error("❌ Failed to fetch user", 500, error)
     }
   }
 
   getUserById = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params
-      const user = await userModel.getUserById(id)
+      const id = req.params.id
+      const user = await this.userModel.getUserById(id)
 
-      return res.success("🔍 User fetched", user)
+      return user.length
+        ? res.success("🔍 User fetched", user)
+        : res.error("📧❌ User not found", 404)
     } catch (error) {
-      // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, errors,error)
-      // }
-
       return res.error("❌ Failed to fetch user", 500, error)
     }
   }
@@ -79,12 +73,11 @@ class UserController {
     try {
       const { name, role, email, password } = req.body
 
-      const existingUsers = await userModel.getUserByEmail(email)
+      const existingUsers = await this.userModel.getUserByEmail(email)
       if (existingUsers.length)
         return res.error("📧❌ Email already in use", 409)
-      if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is not defined")
 
-      const userData = await userModel.createUser({
+      const userData = await this.userModel.createUser({
         name,
         role,
         email,
@@ -92,13 +85,10 @@ class UserController {
       })
       const { password: userPassword, ...user } = userData[0]
 
-      const token = jwt.sign({ data: { user: { id: user.id } } })
+      const token = this.jwtService.sign({ data: { user: { id: user.id } } })
 
       return res.success("🌟 User created", { user, token }, 201)
     } catch (error) {
-      // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, errors,error)
-      // }
       return res.error("❌ Failed to create user", 500, error)
     }
   }
@@ -106,6 +96,9 @@ class UserController {
   updateUser = async (req: Request, res: Response) => {
     try {
       const { id } = req.params
+      const existingUsers = await this.userModel.getUserById(id)
+      if (!existingUsers.length) return res.error("📧❌ User not found", 404)
+
       const { name, email, password, role } = req.body
       const updates: {
         name?: string
@@ -119,7 +112,7 @@ class UserController {
       if (email) updates.email = email
       if (password) updates.password = password
 
-      const userData = await userModel.updateUser(id, {
+      const userData = await this.userModel.updateUser(id, {
         name,
         email,
         password,
@@ -130,10 +123,6 @@ class UserController {
 
       return res.success("♻️ User updated", user, 200)
     } catch (error) {
-      // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, errors,error)
-      // }
-
       return res.error("❌ Failed to update user", 500, error)
     }
   }
@@ -141,14 +130,13 @@ class UserController {
   deleteUser = async (req: Request, res: Response) => {
     try {
       const { id } = req.params
-      const user = await userModel.deleteUser(id)
+      const existingUsers = await this.userModel.getUserById(id)
+      if (!existingUsers.length) return res.error("📧❌ User not found", 404)
+
+      const user = await this.userModel.deleteUser(id)
 
       return res.success("🗑 User deleted", user, 200)
     } catch (error) {
-      // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, errors,error)
-      // }
-
       return res.error("❌ Failed to deleted user", 500, error)
     }
   }
@@ -156,14 +144,13 @@ class UserController {
   forceDeleteUser = async (req: Request, res: Response) => {
     try {
       const { id } = req.params
-      const user = await userModel.forceDeleteUser(id)
+      const existingUsers = await this.userModel.getUserById(id)
+      if (!existingUsers.length) return res.error("📧❌ User not found", 404)
+
+      const user = await this.userModel.forceDeleteUser(id)
 
       return res.success("🗑 User deleted", user, 200)
     } catch (error) {
-      // if (error instanceof mongoose.Error.ValidationError) {
-      //   return res.error("❌ Validation failed", 400, errors,error)
-      // }
-
       return res.error("❌ Failed to deleted user", 500, error)
     }
   }
