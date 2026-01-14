@@ -54,7 +54,7 @@ services:
       - mongodb
       - postgresql
       - minio
-  # nextjs:
+  # app_frontend:
   #   image: node:lts-alpine
   #   container_name: nextjs
   #   working_dir: /usr/app/nextjs
